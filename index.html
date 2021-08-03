@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Zeal AR Demo</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="demo-styles.css">
+    
+    <!-- The following libraries and polyfills are recommended to maximize browser support -->
+    <!-- NOTE: you must adjust the paths as appropriate for your project -->
+    
+    <!-- 🚨 REQUIRED: Web Components polyfill to support Edge and Firefox < 63 -->
+<!--     <script src="https://unpkg.com/@webcomponents/webcomponentsjs@2.1.3/webcomponents-loader.js"></script> -->
+
+    <!-- 💁 OPTIONAL: Intersection Observer polyfill for better performance in Safari and IE11 -->
+<!--     <script src="https://unpkg.com/intersection-observer@0.5.1/intersection-observer.js"></script> -->
+
+    <!-- 💁 OPTIONAL: Resize Observer polyfill improves resize behavior in non-Chrome browsers -->
+<!--     <script src="https://unpkg.com/resize-observer-polyfill@1.5.0/dist/ResizeObserver.js"></script> -->
+    
+    <!-- 💁 OPTIONAL: The :focus-visible polyfill removes the focus ring for some input types -->
+    <script src="https://unpkg.com/focus-visible@5.0.2/dist/focus-visible.js" defer></script>
+	<script src="https://unpkg.com/bowser@2.7.0/es5.js"></script>
+<h1>Instructions:-</h1>
+    <p>1. Click on the blue "Activate AR" button at the top of the panel. Choose a spacious, textured surface. Android devices require Google Chrome for accurate use.</p>
+    <p>2. Follow the instructions on your device’s screen to place the 600 x 600 panel. The panel will lock to the surface at a scale of 1:1. Android users will have to switch to Vertical Link for wall placement.
+</p>
+  <p>3. You can move the panel along the surface by dragging with 1 finger OR spin on the vertical axis using 2 fingers. IOS devices will be able to switch between vertical and horizontal surfaces on the same link.</p>
+ <p> TROUBLE SHOOTING: <a href="https://metrixgroup.com.au/metrix-augmented-reality-tool/">Click Here</a> 
+</p>
+  </head> 
+<body>
+  <div id="card">
+    <!-- All you need to put beautiful, interactive 3D content on your site: -->
+   <model-viewer id="model-viewer" src="https://cdn.glitch.com/705ccafe-1195-46d2-b6a2-dc246d16e26d%2FFinalModelAnimated.glb?v=1621137478614" shadow-intensity="1" ar ar-modes="webxr quick-look" camera-controls ar-placement="wall">
+  <a id="ar-link" rel="ar" href="https://cdn.glitch.com/bef5d249-9f90-453e-93f4-04e93a9fa798%2FFinalModel.usdz#custom=https://plain-hulking-stop.glitch.me/index.html&allowsContentScaling=0">  <img src="https://cdn.glitch.com/1a82ec2f-c557-41a0-b502-a90dbc93a23a%2FActivate.jpeg?v=1619532878960" id = "ios-button" style="display:none; background-color: #1583C4;color: white; border-radius: 0px; border: none; position: absolute; top: 0px; center: 0px;width: 100%; height: 50px; "> </a>
+  <button slot="ar-button" style="background-color: #1583C4;color: white; border-radius: 0px; border: none; position: absolute; top: 0px; center: 0px;width: 100%; height: 50px; "> 
+                    Activate AR
+                   </button>
+
+  <button onclick="myFunction()" id="view-specs" style="display:none;background-color: #1583C4;color: white; border-radius: 0px; border: none; position: absolute; top: 60px; center: 0px;width: 25%; left:25px; height: 50px;"> 
+                    View Specs
+                   </button>
+
+  <button onclick="myFunctionRequest()" id="order-sample" style="display:none;background-image:url('https://plain-hulking-stop.glitch.me/index.html');color: white; border-radius: 0px; border: none; position: absolute; top: 800px;right:55px;center: 0px;width:75%; height: 50px;"> 
+                    Sample Request
+                   </button>
+     
+      <img id="gif-image" src = "https://cdn.glitch.com/3e26816b-ebb3-41e8-95e7-8800de6abe32%2FGif.gif?v=1616158428571" style="display:none; position: absolute; top: 410px;right: 60px;center: 0px;width:70%; height: 200px;">
+
+  <div class="slider">
+    <div class="slides">
+      <button id="90deg" class="slide selected" onclick="switchSrc(this, 'FinalModel90deg');modelswitch()" style="display:none;background-color: #1583C4;color: white; border-radius: 0px; border: none; position: absolute; top: 50px; center: 0px;width: 25%; left:25px; height: 50px;">
+          Rotate
+      </button>
+      <button id="180deg" class="slide" onclick="switchSrc(this, 'FinalModel180deg');modelswitch02()" style="display:none;background-color: #1583C4;color: white; border-radius: 0px; border: none; position: absolute; top: 50px; center: 0px;width: 25%; left:25px; height: 50px;">
+          Rotate
+      </button>
+      <button id="270deg" class="slide" onclick="switchSrc(this, 'FinalModel270deg');modelswitch03()" style="display:none;background-color: #1583C4;color: white; border-radius: 0px; border: none; position: absolute; top: 50px; center: 0px;width: 25%; left:25px; height: 50px;">
+         Rotate
+      </button>
+      <button id="360deg" class="slide" onclick="switchSrc(this, 'FinalModelAnimated');modelswitch04()" style="display:none;background-color: #1583C4;color: white; border-radius: 0px; border: none; position: absolute; top: 50px; center: 0px;width: 25%; left:25px; height: 50px;">
+      Rotate
+      </button>
+     </div>
+  </div>
+</model-viewer>
+
+<script type="module">
+  const modelViewer = document.querySelector("model-viewer");
+
+  window.switchSrc = (element, name) => {
+    const base = "https://cdn.glitch.com/705ccafe-1195-46d2-b6a2-dc246d16e26d%2F" + name;
+    modelViewer.src = base + '.glb';
+    
+    const slides = document.querySelectorAll(".slide");
+    slides.forEach((element) => {element.classList.remove("selected");});
+    element.classList.add("selected");
+  };
+
+  document.querySelector(".slider").addEventListener('beforexrselect', (ev) => {
+    // Keep slider interactions from affecting the XR scene.
+    ev.preventDefault();
+  });
+</script>
+
+<style>
+  
+
+ 
+  
+
+  
+
+  
+
+
+
+  
+  
+
+  
+
+ 
+
+
+
+  
+
+  
+
+  .slides {
+    
+    
+    
+   
+    
+  }
+
+  .slide {
+    
+    flex-shrink: 0;
+    width: 100px;
+    height: 30px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #fff;
+    margin-right: 0px;
+    border-radius: 0px;
+    border: none;
+   
+  }
+
+  
+
+ 
+
+  
+  }
+
+</style>
+ <button onclick="myFunction()" style="background-color: #1583C4;color: white; border-radius: 0px; border: none; position: absolute; top: 750px; center: 0px;width: 25%; left:25px; height: 50px;"> 
+                    View Specs
+    </button>
+    
+    
+       <button onclick="myFunctionRequest()" style="background-color: #1583C4;color: white; border-radius: 0px; border: none; position: absolute; top: 750px;right:25px;center: 0px;width:25%; height: 50px;"> 
+                    Sample Request
+                   </button>
+     
+  </div>
+  <script>
+function myFunction() {
+   window.open("https://metrixgroup.com.au/wp-content/uploads/2021/06/Metrix-Group-3D-Disc.pdf", "myWindow", 'width=800,height=600');
+}
+</script>
+  
+  <script>
+function myFunctionRequest() {
+   window.open("https://content.metrixgroup.com.au", "myWindow", 'width=800,height=600');
+}
+</script>
+  <script>
+ var view = document.getElementById("view-specs");
+ var order = document.getElementById("order-sample")
+ var gifimage = document.getElementById("gif-image")
+ var rotate = document.getElementById("90deg");
+  document.querySelector("model-viewer").addEventListener('ar-status', (event) => {
+     
+    if(event.detail.status === 'session-started'){
+      
+   view.style.display = "none";
+      order.style.display="block";
+     gifimage.style.display="block";
+    
+    }else if(event.detail.status === 'not-presenting'){
+      view.style.display = "none";
+      order.style.display="none";
+      rotate.style.display="none";
+      
+    }else if(event.detail.status==='object-placed'){
+      gifimage.style.display="none";
+      rotate.style.display="block";
+    }
+      
+    
+    
+  });
+</script>
+  <script>
+    var result = bowser.getParser(window.navigator.userAgent);
+    console.log(result.parsedResult.browser.name);
+    const linkElement01 = document.getElementById("ios-button");
+    if(result.parsedResult.browser.name == 'Safari'){
+      linkElement01.style.display = 'block';
+    }
+    
+   
+    
+    
+  </script>
+  
+  <script>
+    const modelViewer = document.querySelector("model-viewer");
+    var ninetydeg = document.getElementById("90deg");
+    var oneeighty = document.getElementById("180deg");
+    var twoseventy = document.getElementById("270deg");
+    var threesixty = document.getElementById("360deg");
+    function modelswitch(){
+      
+      ninetydeg.style.display="none";
+      oneeighty.style.display="block";
+      
+    }
+    
+    function modelswitch02(){
+    
+      oneeighty.style.display="none";
+      twoseventy.style.display="block";
+    }
+    
+    function modelswitch03(){
+      
+      twoseventy.style.display="none";
+      threesixty.style.display="block";
+    }
+    
+    function modelswitch04(){
+     
+      threesixty.style.display="none";
+      ninetydeg.style.display="block"
+    }
+    
+    
+  </script>
+  
+  
+  
+   
+  
+  <script>
+ const linkElement = document.getElementById("ar-link");
+linkElement.addEventListener("message", function (event) {   
+    if (event.data == "_apple_ar_quicklook_button_tapped") {
+         window.open("https://content.metrixgroup.com.au", "myWindow", 'width=800,height=600');
+    }
+}, false);
+</script>
+  
+  
+  
+  
+  <!-- 💁 Include both scripts below to support all browsers! -->
+
+  <!-- Loads <model-viewer> for modern browsers: -->
+  <script type="module"
+      src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
+  </script>
+
+  <!-- Loads <model-viewer> for old browsers like IE11: -->
+  <script nomodule
+      src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js">
+  </script>
+</body>
+</html>
